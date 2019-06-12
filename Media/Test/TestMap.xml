@@ -1,0 +1,16 @@
+<Map>
+  <GridData Resolution="720,1080" RenderPos="0,200" ViewableRow="24" ViewableColumn="39" GridRow = "240" GridColumn = "390"/>
+	<TestObjectData>
+		<Hay ID="0" Name="Hay" HP="100" PI="TestGame/AA.pi" PIUnit="3" >
+		</Hay>
+		<Floor Name="Floor" ID="1" HP="0">
+		</Floor>
+		<Wall ID="0" Name="Wall" HP="100" PI="TestGame/AA.pi" PIUnit="3" >
+		</Wall>
+	</TestObjectData>
+	<GeneratingRule>
+		<ObjectData ID="0" Probability="3" />
+		<ObjectData ID="1" Probability="3" />
+		<ObjectData ID="2" Probability="3" />
+	</GeneratingRule>
+</Map>

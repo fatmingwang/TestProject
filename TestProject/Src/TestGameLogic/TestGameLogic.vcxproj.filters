@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{7adcaaeb-216b-4b6c-8b24-0e4640f14f93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tank">
+      <UniqueIdentifier>{c22d88f8-c38d-4284-bf53-bb4b7a99e27c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{c826d87d-a4b8-408a-a2a3-288aca4aab9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameApp">
+      <UniqueIdentifier>{c88ec97b-09e9-4e62-ac3e-e3c9d9877ec2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameApp.h">
+      <Filter>GameApp</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTank.h">
+      <Filter>Tank</Filter>
+    </ClInclude>
+    <ClInclude Include="TestObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TestObjectHay.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TestObjectWall.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TestObjectFloor.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TankController.h">
+      <Filter>Tank</Filter>
+    </ClInclude>
+    <ClInclude Include="LogID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>GameApp</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTank.cpp">
+      <Filter>Tank</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObjectHay.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObjectFloor.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObjectWall.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TankController.cpp">
+      <Filter>Tank</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>
