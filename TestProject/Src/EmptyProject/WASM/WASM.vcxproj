@@ -254,10 +254,6 @@
       <Project>{d5962a80-cfcf-437a-b224-01c03cf9fd1a}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\FatmingCollada\FatmingCollada.vcxproj">
-      <Project>{27c4a269-2e08-4644-b3c9-f5090703fa1d}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\..\Core\Math\MathParser\MathParser.vcxproj">
       <Project>{5c1f4bc1-20c6-40d1-b0b8-bec8f333dc99}</Project>
     </ProjectReference>

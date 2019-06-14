@@ -15,11 +15,11 @@
     <Filter Include="Tank">
       <UniqueIdentifier>{c22d88f8-c38d-4284-bf53-bb4b7a99e27c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects">
-      <UniqueIdentifier>{c826d87d-a4b8-408a-a2a3-288aca4aab9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameApp">
       <UniqueIdentifier>{c88ec97b-09e9-4e62-ac3e-e3c9d9877ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map\Objects">
+      <UniqueIdentifier>{c826d87d-a4b8-408a-a2a3-288aca4aab9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,16 +36,16 @@
       <Filter>Tank</Filter>
     </ClInclude>
     <ClInclude Include="TestObject.h">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClInclude>
     <ClInclude Include="TestObjectHay.h">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClInclude>
     <ClInclude Include="TestObjectWall.h">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClInclude>
     <ClInclude Include="TestObjectFloor.h">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClInclude>
     <ClInclude Include="TankController.h">
       <Filter>Tank</Filter>
@@ -71,16 +71,16 @@
       <Filter>Tank</Filter>
     </ClCompile>
     <ClCompile Include="TestObject.cpp">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClCompile>
     <ClCompile Include="TestObjectHay.cpp">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClCompile>
     <ClCompile Include="TestObjectFloor.cpp">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClCompile>
     <ClCompile Include="TestObjectWall.cpp">
-      <Filter>Objects</Filter>
+      <Filter>Map\Objects</Filter>
     </ClCompile>
     <ClCompile Include="TankController.cpp">
       <Filter>Tank</Filter>

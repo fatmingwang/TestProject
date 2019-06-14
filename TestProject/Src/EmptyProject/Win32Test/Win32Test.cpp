@@ -60,7 +60,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	}
 	g_pGameApp = new cTestApp(g_hWnd,cGameApp::m_svGameResolution,Vector2(cGameApp::m_svViewPortSize.Width(),cGameApp::m_svViewPortSize.Height()));
 	g_pGameApp->Init();
-	cGameApp::SetAcceptRationWithGameresolution((int)g_WindowSize.x,(int)g_WindowSize.y,(int)cGameApp::m_svGameResolution.x,(int)cGameApp::m_svGameResolution.y);
+	//cGameApp::SetAcceptRationWithGameresolution((int)g_WindowSize.x,(int)g_WindowSize.y,(int)cGameApp::m_svGameResolution.x,(int)cGameApp::m_svGameResolution.y);
 	SetTimer (g_hWnd, 0, 0, NULL) ;
 
 
@@ -138,7 +138,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	cGameApp::m_svViewPortSize.x = 1024.;
 	cGameApp::m_svViewPortSize.y = 768.f;
 	cGameApp::ResoluctionParse("EngineTestSetup.xml");
-
+	auto l_wid = cGameApp::m_svViewPortSize.Width();
+	auto l_wid2 = cGameApp::m_svViewPortSize.Height();
 	DWORD	l_dwFlag = WS_OVERLAPPEDWINDOW;
 	if(cGameApp::m_sbFullScreen)
 		l_dwFlag = WS_VISIBLE | WS_POPUP |	WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
@@ -175,7 +176,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case  WM_SIZE:
 		g_WindowSize.x = (int)LOWORD(lParam);
 		g_WindowSize.y = (int)HIWORD(lParam);
-		cGameApp::SetAcceptRationWithGameresolution((int)LOWORD(lParam),(int)HIWORD(lParam),(int)cGameApp::m_svGameResolution.x,(int)cGameApp::m_svGameResolution.y);
+		//cGameApp::SetAcceptRationWithGameresolution((int)LOWORD(lParam),(int)HIWORD(lParam),(int)cGameApp::m_svGameResolution.x,(int)cGameApp::m_svGameResolution.y);
+		cGameApp::m_svViewPortSize.z = (int)LOWORD(lParam);
+		cGameApp::m_svViewPortSize.w = (int)HIWORD(lParam);
 		break;
 	case WM_TIMER:
 		if( !g_bLeave && g_pGameApp )

@@ -4,7 +4,8 @@ class cTestObjectBase:public cRenderObject
 {
 	GET_SET_DEC(int,m_iID,GetID,SetID);
 	GET_SET_DEC(int,m_iHP,GetHP,SetHP);
-	cRenderObject*	m_pRenderObject;
+	GET_SET_DEC(int,m_iTableIndex, GetTableIndex, SetTableIndex);
+	cBaseImage*		m_pRenderObject;
 	//
 	void			ProcessRenderObjectData(TiXmlElement*e_pElement);
 	//

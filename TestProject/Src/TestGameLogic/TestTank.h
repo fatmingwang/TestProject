@@ -2,11 +2,6 @@
 
 #include <functional>
 
-struct sMoving
-{
-
-};
-
 class cTestTank :public cRenderObject,public cMessageSender
 {
 	enum eTankStatus
