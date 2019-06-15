@@ -33,10 +33,10 @@ class cCommonRegisterManager
 protected:
 	std::list<std::function<TYPE*(TiXmlElement*)>>				m_RegisterList;
 public:
-	cCommonRegisterManager(){ AddCloneRegisterFunction(); }
+	cCommonRegisterManager(){  }
 	virtual ~cCommonRegisterManager(){}
 	virtual TYPE*									GetObjectByParseXmlElement(TiXmlElement*e_pTiXmlElement);
-	void			AddCloneRegisterFunction();
+	//void			AddCloneRegisterFunction();
 	virtual void	AddRegisterFunction(std::function<TYPE*(TiXmlElement*)> e_Function)
 	{
 		m_RegisterList.push_back(e_Function);

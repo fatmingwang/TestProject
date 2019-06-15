@@ -54,10 +54,10 @@ namespace UT
 	Vector4				GetCurveCenter(std::vector<Vector4>*e_pDataVector,float*e_pfRightDownToLeftUpperLength = 0);
 	Vector4				GetBiggerRect(Vector4 e_vOld,Vector4 e_vNew);
 
-	inline	POINT		operator+=(POINT e_Point1,POINT e_Point2){e_Point1.x+=e_Point2.x;e_Point1.y+=e_Point2.y;return e_Point1;}
-	inline	POINT		operator-=(POINT e_Point1,POINT e_Point2){e_Point1.x-=e_Point2.x;e_Point1.y-=e_Point2.y;return e_Point1;}
-	inline	POINT		operator+(POINT e_Point1,POINT e_Point2){e_Point1.x+=e_Point2.x;e_Point1.y+=e_Point2.y;return e_Point1;}
-	inline	POINT		operator-(POINT e_Point1,POINT e_Point2){e_Point1.x-=e_Point2.x;e_Point1.y-=e_Point2.y;return e_Point1;}
+	//inline	POINT		operator+=(POINT e_Point1,POINT e_Point2){e_Point1.x+=e_Point2.x;e_Point1.y+=e_Point2.y;return e_Point1;}
+	//inline	POINT		operator-=(POINT e_Point1,POINT e_Point2){e_Point1.x-=e_Point2.x;e_Point1.y-=e_Point2.y;return e_Point1;}
+	//inline	POINT		operator+(POINT e_Point1,POINT e_Point2){e_Point1.x+=e_Point2.x;e_Point1.y+=e_Point2.y;return e_Point1;}
+	//inline	POINT		operator-(POINT e_Point1,POINT e_Point2){e_Point1.x-=e_Point2.x;e_Point1.y-=e_Point2.y;return e_Point1;}
 	//hexadecimal
 	//multiply
 	inline	int64		BitMoveLeft(int64 e_iValue,int ShiftCount){ShiftCount+=1;while(--ShiftCount){e_iValue *= 2;}return e_iValue;}

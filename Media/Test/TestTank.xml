@@ -1,0 +1,12 @@
+<TestTankContainer>
+  <TestTank Color="1.5,1,1,1" Name="Red" Power="10">
+      <AnimationData PI="Test/Image.pi" Left="Left" Up="Up" Right="Right" Down="Down" />
+   </TestTank>
+  <TestTank Color="1,1.5,1,1" Name="Green" Power="25">
+    <AnimationData PI="Test/Image.pi" Left="Left" Up="Up" Right="Right" Down="Down"/>
+  </TestTank>
+  <TestTank Color="1,1,1.5,1" Name="Blue" Power="20">
+    <AnimationData PI="Test/Image.pi" Left="Left" Up="Up" Right="Right" Down="Down"/>
+  </TestTank>
+  <TestBullet PI="Test/Image.pi" PIUnit="NPC_2"/>
+</TestTankContainer>

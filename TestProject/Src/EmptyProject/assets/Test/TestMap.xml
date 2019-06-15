@@ -1,0 +1,15 @@
+<Map RenderPos="0,0" MoveTC="0.3">
+  <!-- Resolution為遊戲的解析度跟Viewport無關(Canvans) ViewableRow,ViewableColumn為遊戲中要被看到的範圍  GridRow,GridColumn為地圖最大範圍 -->
+  <GridData  Resolution="1720,2080" ViewableRow="10" ViewableColumn="20" GridRow="148" GridColumn="178"/>
+	<TestObjectData>
+		<cTestObjectHay   ID="0" Name="Hay"   HP="100" PI="Test/Image.pi" PIUnit="Tree" />
+		<cTestObjectFloor ID="1" Name="Floor" HP="0"/>
+		<cTestObjectWall  ID="2" Name="Wall"  HP="-1" PI="Test/Image.pi" PIUnit="Gate" />
+	</TestObjectData>
+  <!-- 物品產生的機率 加總後做百分比出現不滿整個區域 -->
+	<GeneratingRule>
+		<ObjectData ID="0" Probability="30" />
+		<ObjectData ID="1" Probability="700" />
+		<ObjectData ID="2" Probability="20" />
+	</GeneratingRule>
+</Map>

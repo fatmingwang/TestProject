@@ -219,7 +219,7 @@
     <ClCompile>
       <PreprocessorDefinitions>WASM</PreprocessorDefinitions>
       <CppLanguageStandard>c++11</CppLanguageStandard>
-      <AdditionalIncludeDirectories>../EngineTest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>--bind %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -228,23 +228,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\EngineTest\TestShader.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\EngineTest\TestPhase.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\GameApp.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\stdafx.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TankBullet.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TankController.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestMap.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestMapDataParse.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestObject.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestObjectFloor.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestObjectHay.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestObjectWall.cpp" />
+    <ClCompile Include="..\..\TestGameLogic\TestTank.cpp" />
     <ClCompile Include="WASMTest.cpp" />
-    <ClCompile Include="..\EngineTest\GameApp.cpp" />
-    <ClCompile Include="..\EngineTest\Sample.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\EngineTest\TestShader.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="..\EngineTest\TestPhase.h" />
-    <ClInclude Include="..\EngineTest\GameApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Bullet\Bullet.vcxproj">
@@ -263,6 +258,20 @@
     <ProjectReference Include="..\..\Freetype\Freetype.vcxproj">
       <Project>{29840bd0-19c2-4ddd-bc75-2ec94b6c9eec}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\TestGameLogic\Event.h" />
+    <ClInclude Include="..\..\TestGameLogic\GameApp.h" />
+    <ClInclude Include="..\..\TestGameLogic\LogID.h" />
+    <ClInclude Include="..\..\TestGameLogic\stdafx.h" />
+    <ClInclude Include="..\..\TestGameLogic\TankBullet.h" />
+    <ClInclude Include="..\..\TestGameLogic\TankController.h" />
+    <ClInclude Include="..\..\TestGameLogic\TestMap.h" />
+    <ClInclude Include="..\..\TestGameLogic\TestObject.h" />
+    <ClInclude Include="..\..\TestGameLogic\TestObjectFloor.h" />
+    <ClInclude Include="..\..\TestGameLogic\TestObjectHay.h" />
+    <ClInclude Include="..\..\TestGameLogic\TestObjectWall.h" />
+    <ClInclude Include="..\..\TestGameLogic\TestTank.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

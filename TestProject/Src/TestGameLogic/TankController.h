@@ -1,14 +1,22 @@
 #pragma once
 
 #include "TestTank.h"
-
-class cTestTankController :public cRenderObject,public cNamedTypedObjectVector<cTestTank>
+#include "TankBullet.h"
+//bullet collision is here!.
+class cTestTankController :public cRenderObject,public cNamedTypedObjectVector<cTestTank>, public cNodeISAX,public cMessageSender
 {
-	cTestTank*	m_pSelectedTank;
-
-	cTestTank*	SelectNextTank();
+	virtual	bool									MyParse(TiXmlElement*e_pRoot)override;
 	//
-	bool										KeyEventFuntion(void *e_pData);
+	cWaitForFetchFunctionObjectList<cTankBullet>*	m_pTankBulletVector;
+	//
+	cTestTank*	m_pSelectedTank;
+	//
+	bool											FireEvent(void *e_pData);
+	//
+	void											BulletUpdate(float e_fElpaseTime);
+	void											TankUpdate(float e_fElpaseTime);
+	void											BulletRender();
+	void											TankRender();
 public:
 	cTestTankController();
 	virtual ~cTestTankController();
@@ -17,4 +25,7 @@ public:
 	virtual	void	Update(float e_fElpaseTime)override;
 	virtual	void	Render()override;
 	virtual	void	DebugRender()override;
+
+	cTestTank*		SelectNextTank();
+	cTestTank*		GetSelectedTank() { return m_pSelectedTank; }
 };

@@ -2,7 +2,8 @@
 #include "GameApp.h"
 #include "TestMap.h"
 #include "Event.h"
-
+#include "LogID.h"
+cBaseImage*g_pRMImage = nullptr;
 #if defined(ANDROID)
 cTestApp::cTestApp(ANativeActivity* e_pActivity,JNIEnv*e_pThreadEnv,jobject*e_pAppThreadThis,Vector2 e_vGameResolution,Vector2 e_vViewportSize,NvEGLUtil*e_pNvEGLUtil ):cGameApp(e_pActivity,e_pThreadEnv,e_pAppThreadThis,e_vGameResolution,e_vViewportSize,e_pNvEGLUtil)
 #elif defined(WIN32)
@@ -11,12 +12,14 @@ cTestApp::cTestApp(HWND e_Hwnd,Vector2 e_vGameResolution,Vector2 e_vViewportSize
 cTestApp::cTestApp(Vector2 e_vGameResolution,Vector2 e_vViewportSize):cGameApp(e_vGameResolution,e_vViewportSize)
 #endif
 {
+	FMLog::LogWithFlag("cTestMap start ", LOG_ID_TESTAPP, false);
 	this->m_sbDebugFunctionWorking = true;
 	this->m_sbSpeedControl = true;
 	m_bLeave = false;
 #ifdef DEBUG
 	this->m_sbSpeedControl = true;
 #endif
+	g_pRMImage = new cBaseImage("Test/RM.png");
 }
 
 cTestApp::~cTestApp()
@@ -27,10 +30,14 @@ cTestApp::~cTestApp()
 
 void	cTestApp::Init()
 {
-	cGameApp::Init();	
+	FMLog::LogWithFlag("cTestApp::Init start ", LOG_ID_TESTAPP, false);
+#ifndef WASM
+	cGameApp::Init();
+#endif
 	cTestMap::GetInstance()->Init();
 	//let first update is not too big
 	this->m_sTimeAndFPS.Update();
+	FMLog::LogWithFlag("cTestApp::Init end ", LOG_ID_TESTAPP, false);
 }
 
 void	cTestApp::Update(float e_fElpaseTime)
@@ -52,7 +59,11 @@ void	cTestApp::Render()
 		//cGameApp::ShowInfo();
 		cTestMap::GetInstance()->DebugRender();
 	}
-
+	if (g_pRMImage)
+	{
+		g_pRMImage->SetLocalPosition(Vector3(cGameApp::m_svGameResolution.x/2 - g_pRMImage->GetWidth()/2, cGameApp::m_svGameResolution.y / 2,0 - g_pRMImage->GetHeight() / 2));
+		g_pRMImage->Render();
+	}
 #ifdef WIN32
 	SwapBuffers(cGameApp::m_sHdc);
 #endif
@@ -60,6 +71,10 @@ void	cTestApp::Render()
 
 void	cTestApp::MouseDown(int e_iPosX,int e_iPosY)
 {
+	if (g_pRMImage)
+	{
+		SAFE_DELETE(g_pRMImage);
+	}
     cGameApp::MouseDown(e_iPosX,e_iPosY);
 }
 
@@ -75,6 +90,10 @@ void	cTestApp::MouseUp(int e_iPosX,int e_iPosY)
 
 void	cTestApp::KeyDown(char e_char)
 {
+	if (g_pRMImage)
+	{
+		SAFE_DELETE(g_pRMImage);
+	}
 	 cGameApp::KeyDown(e_char);
 	 seT_E_KEY_DOWNData l_seT_E_KEY_DOWNData;
 	 l_seT_E_KEY_DOWNData.bPressed = true;

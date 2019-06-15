@@ -2,6 +2,8 @@
 
 class cTestObjectBase:public cRenderObject
 {
+protected:
+	int				m_iOriginalHP;
 	GET_SET_DEC(int,m_iID,GetID,SetID);
 	GET_SET_DEC(int,m_iHP,GetHP,SetHP);
 	GET_SET_DEC(int,m_iTableIndex, GetTableIndex, SetTableIndex);

@@ -4,12 +4,13 @@
 
 class cTestTank :public cRenderObject,public cMessageSender
 {
+	friend class		cTestTankController;
 	enum eTankStatus
 	{
-		eTS_IDLE = 0,
-		eTS_MOVING,
-		eTS_FIRE,
-		eTS_CHANGE_DIRECTION,
+		eTS_LEFT = 0,
+		eTS_UP,
+		eTS_RIGHT,
+		eTS_DOWN,
 		eTS_MAX,
 	};
 	enum eKey
@@ -23,11 +24,14 @@ class cTestTank :public cRenderObject,public cMessageSender
 	};
 	eKey										GetKey(const wchar_t*e_strKey);
 	eTankStatus									GetTankStatus(const wchar_t*e_strKey);
-	unsigned char								m_ucKey[eK_MAX];
-	cMPDI*										m_Animation[eTS_MAX];
-	bool										m_bAllowToDoNewCommand;
-	//
+	eTankStatus									m_CurrentTankStatus;
 	eDirection									m_eDirection;
+	//unsigned char								m_ucKey[eK_MAX];//lazy lah
+	Vector4										m_vColor;
+	int											m_iPower;
+	cBaseImage*									m_pAnimation[eTS_MAX];//lazy larh
+	bool										m_bAllowToDoNewCommand;//lazy larh
+	//
 	void										DirectionUpdate(float e_fElpaseTime);
 	void										MovingUpdate(float e_fElpaseTime);
 	void										FireUpdate(float e_fElpaseTime);
@@ -39,6 +43,8 @@ class cTestTank :public cRenderObject,public cMessageSender
 	//
 	void										ProcessKeyBindingData(TiXmlElement*e_pTiXmlElement);
 	void										ProcessAnimationData(TiXmlElement*e_pTiXmlElement);
+	//
+	int											m_iTableIndex;
 public:
 	cTestTank();
 	cTestTank(TiXmlElement*e_pTiXmlElement);
@@ -47,4 +53,7 @@ public:
 	virtual	void	Render()override;
 	virtual	void	DebugRender()override;
 	bool			IsAllowToDoNewCommand();//allow to seitch tank.
+	int				GetTableIndex();
+	void			SetTableIndex(int e_iTableIndex,eDirection e_eDirection);
+	void			Fire();
 };

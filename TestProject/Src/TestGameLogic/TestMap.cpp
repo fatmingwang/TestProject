@@ -6,6 +6,13 @@
 #include "TestObjectWall.h"
 #include "LogID.h"
 #include "Event.h"
+#include "TankController.h"
+
+POINT cTestMap::sGridData::GetTankOffsetPos()
+{
+	POINT l_Pos = { this->iViewableRow / 2,this->iViewableColumn / 2 };
+	return l_Pos;
+}
 cTestMap::sGridData::sGridData()
 {
 	const int l_ciDefaultWidth = 30;
@@ -25,41 +32,6 @@ cTestMap::sGridData::~sGridData()
 	Destroy();
 }
 
-void cTestMap::sGridData::Setup(TiXmlElement * e_pElement)
-{
-	Vector2 l_vResolution = cGameApp::m_svGameResolution;
-	PARSE_ELEMENT_START(e_pElement)
-		COMPARE_NAME("Resolution")
-		{
-			l_vResolution = GetVector2(l_strValue);
-			vResoultion = l_vResolution;
-		}
-		else
-		COMPARE_NAME("GridRow")
-		{
-			iRow = GetInt(l_strValue);
-		}
-		else
-		COMPARE_NAME("GridColumn")
-		{
-			iColumn = GetInt(l_strValue);
-		}
-		else
-		COMPARE_NAME("ViewableRow")
-		{
-			iViewableRow = GetInt(l_strValue);
-		}
-		else
-		COMPARE_NAME("ViewableColumn")
-		{
-			iViewableColumn = GetInt(l_strValue);
-		}
-	PARSE_NAME_VALUE_END
-	iGridWidth = (int)l_vResolution.x/ iViewableRow;
-	iGridHeight = (int)l_vResolution.y / iViewableColumn;
-	iTotal = iRow*iColumn;
-}
-
 void cTestMap::sGridData::Destroy()
 {
 	if (ppTestObjectArray)
@@ -75,14 +47,19 @@ void cTestMap::sGridData::Destroy()
 
 cTestMap::cTestMap()
 {
+	REGISTER_CLONE_FUNCTION_TO_MANGER(cTestObjectFloor);
+	REGISTER_CLONE_FUNCTION_TO_MANGER(cTestObjectHay);
+	REGISTER_CLONE_FUNCTION_TO_MANGER(cTestObjectWall);
 	REG_EVENT(eT_E_KEY_DOWN, &cTestMap::KeyEventFuntion);
 	m_NextTimeAllowToMoveTC.SetTargetTime(0.3f);
 	m_fMoveSpeedUp = 1.f;
+	m_pTestTankController = new cTestTankController();
 }
 
 cTestMap::~cTestMap()
 {
 	m_GridData.Destroy();
+	SAFE_DELETE(m_pTestTankController);
 }
 
 NamedTypedObject * cTestMap::Clone()
@@ -91,10 +68,10 @@ NamedTypedObject * cTestMap::Clone()
 	return nullptr;
 }
 
-int cTestMap::sGridData::GetConvertIndex(int e_iX, int e_iY, int&e_iConvertedX, int&e_iConvertedY)
+int cTestMap::sGridData::GetConvertTableIndex(int e_iLocalX, int e_iLocalY, int&e_iConvertedX, int&e_iConvertedY)
 {
-	e_iConvertedX = UT::GetLoopIndex(this->CurrentFirstIndex.x+ e_iX, iRow);
-	e_iConvertedY = UT::GetLoopIndex(this->CurrentFirstIndex.y+ e_iY, iColumn);
+	e_iConvertedX = UT::GetLoopIndex(this->CurrentFirstIndex.x+ e_iLocalX, iRow);
+	e_iConvertedY = UT::GetLoopIndex(this->CurrentFirstIndex.y+ e_iLocalY, iColumn);
 	int l_iMapIndex = (e_iConvertedY* iRow) + e_iConvertedX;
 	if (l_iMapIndex < 0 || l_iMapIndex >= this->iTotal)
 	{
@@ -105,158 +82,97 @@ int cTestMap::sGridData::GetConvertIndex(int e_iX, int e_iY, int&e_iConvertedX, 
 
 int cTestMap::sGridData::GetTankIndex()
 {
-	int l_iTankIndex = CurrentFirstIndex.x + (CurrentFirstIndex.y*iRow) + iViewableRow / 2 + (iViewableColumn / 2 * iRow);
+	int l_iConvertedX = 0;
+	int l_iConvertedY = 0;
+	int l_iTankIndex = GetConvertTableIndex(iViewableRow / 2, iViewableColumn / 2, l_iConvertedX, l_iConvertedY);
 	return l_iTankIndex;
 }
 
-template<>
-void	cTestMap::AddCloneRegisterFunction()
-{
-	REGISTER_CLONE_FUNCTION_TO_MANGER(cTestObjectFloor);
-	REGISTER_CLONE_FUNCTION_TO_MANGER(cTestObjectHay);
-	REGISTER_CLONE_FUNCTION_TO_MANGER(cTestObjectWall);
-}
+
 bool cTestMap::KeyEventFuntion(void * e_pData)
 {
 	seT_E_KEY_DOWNData*l_peT_E_KEY_DOWNData = (seT_E_KEY_DOWNData*)e_pData;
+	cTestTank*l_pTestTank = nullptr;
+	if (m_pTestTankController)
+		l_pTestTank = m_pTestTankController->GetSelectedTank();
 	if (l_peT_E_KEY_DOWNData->bPressed)
 	{
 		if (!m_NextTimeAllowToMoveTC.bTragetTimrReached)
 			return true;
 		m_NextTimeAllowToMoveTC.Start();
-		if(m_fMoveSpeedUp <= 50.f)
-			m_fMoveSpeedUp += 0.36f;
+		if(m_fMoveSpeedUp <= m_fMaxSpeed)
+			m_fMoveSpeedUp += m_fIncreaseSpeed;
 		int l_iTankIndex = this->m_GridData.GetTankIndex();
 		int l_iFinalIndex = -1;
+		eDirection l_Direction = eDirection::eD_MAX;
 		//37,38,39,40
 		//left,up,right,down
 		switch (l_peT_E_KEY_DOWNData->ucKey)
 		{
 			case 37:
-				l_iFinalIndex = UT::GetLoopIndex(l_iTankIndex-1, m_GridData.iTotal);
-				if(m_GridData.ppTestObjectArray[l_iFinalIndex]->GetHP() == 0)
+				if (IsMoveAble(l_iTankIndex - 1, l_iTankIndex))
+				{
 					--this->m_GridData.CurrentFirstIndex.x;
+					l_Direction = eD_LEFT;
+				}
 				break;
 			case 38:
-				l_iFinalIndex = UT::GetLoopIndex(l_iTankIndex - m_GridData.iRow, m_GridData.iTotal);
-				if (m_GridData.ppTestObjectArray[l_iFinalIndex]->GetHP() == 0)
+				if (IsMoveAble(l_iTankIndex - m_GridData.iRow, l_iTankIndex))
+				{
 					--this->m_GridData.CurrentFirstIndex.y;
+					l_Direction = eD_UP;
+				}
 				break;
 			case 39:
-				l_iFinalIndex = UT::GetLoopIndex(l_iTankIndex + 1, m_GridData.iTotal);
-				if (m_GridData.ppTestObjectArray[l_iFinalIndex]->GetHP() == 0)
+				if (IsMoveAble(l_iTankIndex + 1, l_iTankIndex))
+				{
 					++this->m_GridData.CurrentFirstIndex.x;
+					l_Direction = eD_RIGHT;
+				}
 				break;
 			case 40:
-				l_iFinalIndex = UT::GetLoopIndex(l_iTankIndex + m_GridData.iRow, m_GridData.iTotal);
-				if (m_GridData.ppTestObjectArray[l_iFinalIndex]->GetHP() == 0)
+				if (IsMoveAble(l_iTankIndex + m_GridData.iRow, l_iTankIndex))
+				{
 					++this->m_GridData.CurrentFirstIndex.y;
+					l_Direction = eD_DOWN;
+				}
+				break;
+			case 9://tab switch tank
+			{
+				if (m_pTestTankController)
+				{
+					auto l_pTank = m_pTestTankController->SelectNextTank();
+					CameraJumpTo(l_pTank->GetTableIndex());
+				}
+			}
 				break;
 			default:
 				break;
+		}
+		if (l_pTestTank && l_Direction != eDirection::eD_MAX)
+		{
+			l_pTestTank->SetTableIndex(l_iTankIndex, l_Direction);
 		}
 	}
 	else
 	{
 		m_NextTimeAllowToMoveTC.bTragetTimrReached = true;
 		m_fMoveSpeedUp = 1.f;
+		if(l_peT_E_KEY_DOWNData->ucKey == 17 && l_pTestTank)
+		{
+			l_pTestTank->Fire();
+		}
 	}
 	return false;
 }
-//<Map>
-//	<GridData Resolution = "720,1080" RenderPos = "0,200" GridRow = "20" GridColumn = "20" MinimumRowAndColumn = "6"/>
-//	<TestObjectData>
-		//<Hay ID="0" Name=""Hay HP="100" PI="TestGame/AA.pi" PIUnit="3" >
-		//</Hay>
-		//<Floor ID="1" HP="0">
-		//</Floor>
-		//<Wall ID="0" HP="100" PI="TestGame/AA.pi" PIUnit="3" >
-		//</Wall>
-//	</TestObjectData>
-//	<GeneratingRule>
-	//	<ObjectData ID="0" Probability="0.03" />
-	//	<ObjectData ID="1" Probability="0.03" />
-	//	<ObjectData ID="2" Probability="0.03" />
-//	</GeneratingRule>
-//<Map>
-bool cTestMap::MyParse(TiXmlElement * e_pRoot)
+
+void cTestMap::CameraJumpTo(int e_iTableIndex)
 {
-	auto l_strRenderPos = e_pRoot->Attribute(L"RenderPos");
-	if(l_strRenderPos)
-	{
-			auto l_vPos = GetVector2(l_strRenderPos);
-			this->SetLocalPosition(Vector3(l_vPos.x, l_vPos.y,0.f));
-	}
-	auto l_strMoveTC = e_pRoot->Attribute(L"MoveTC");
-	if (l_strMoveTC)
-	{
-		m_NextTimeAllowToMoveTC.SetTargetTime(GetFloat(l_strMoveTC));
-	}
-	
-	sIDAndProbability l_IDAndProbability;
-	FOR_ALL_FIRST_CHILD_AND_ITS_CIBLING_START(e_pRoot)
-		COMPARE_TARGET_ELEMENT_VALUE_WITH_DEFINE(e_pRoot, L"GeneratingRule")
-		{
-			ProcessGeneratingRuleData(e_pRoot, l_IDAndProbability);
-		}
-		else
-		COMPARE_TARGET_ELEMENT_VALUE_WITH_DEFINE(e_pRoot, L"GridData")
-		{
-			ProcessGridData(e_pRoot);
-		}
-		else
-		COMPARE_TARGET_ELEMENT_VALUE_WITH_DEFINE(e_pRoot, L"TestObjectData")
-		{
-			ProcessTestObjectData(e_pRoot);
-		}
-		
-	FOR_ALL_FIRST_CHILD_AND_ITS_CIBLING_END(e_pRoot)
-	GenerateMap(l_IDAndProbability);
-	return true;
-}
-void	cTestMap::ProcessTestObjectData(TiXmlElement*e_pElement)
-{
-	FOR_ALL_FIRST_CHILD_AND_ITS_CIBLING_START(e_pElement)
-		cTestObjectBase*l_pTestObjectBase = GetObjectByParseXmlElement(e_pElement);
-		if (l_pTestObjectBase)
-		{
-			this->AddObjectNeglectExist(l_pTestObjectBase);
-		}
-		else
-		{
-			UT::ErrorMsg(e_pElement->Value(), L"not support type");
-		}
-	FOR_ALL_FIRST_CHILD_AND_ITS_CIBLING_END(e_pElement)
-}
-//	<GridData Resolution="720,1080" RenderPos="0,200" ViewableRow="24" ViewableColumn="39" GridRow = "240" GridColumn = "390"/>
-void cTestMap::ProcessGridData(TiXmlElement * e_pElement)
-{
-	m_GridData.Setup(e_pElement);
-}
-//	<GeneratingRule>
-	//	<ObjectData ID="0" Probability="3" />
-	//	<ObjectData ID="1" Probability="3" />
-	//	<ObjectData ID="2" Probability="3" />
-//	</GeneratingRule>
-void cTestMap::ProcessGeneratingRuleData(TiXmlElement * e_pElement, sIDAndProbability & e_IDAndProbability)
-{
-	std::vector<int> l_ProbabilityVector;
-	std::vector<int> l_ObjectIDVector;
-	FOR_ALL_FIRST_CHILD_AND_ITS_CIBLING_START(e_pElement)
-		auto l_strID = e_pElement->Attribute(L"ID");
-		auto l_strProbability = e_pElement->Attribute(L"Probability");
-		if (l_strID && l_strProbability)
-		{
-			l_ProbabilityVector.push_back(GetInt(l_strProbability));
-			l_ObjectIDVector.push_back(GetInt(l_strID));
-		}
-		else
-		{
-			FMLog::LogWithFlag("cTestMap::ProcessGeneratingRuleData data not match!", LOG_ID_MAP, false);
-		}
-	FOR_ALL_FIRST_CHILD_AND_ITS_CIBLING_END(e_pElement)
-	e_IDAndProbability.ObjectIDVector = l_ObjectIDVector;
-	e_IDAndProbability.ProbabilityValue.SetupProbabilityData(l_ProbabilityVector);
+	POINT l_TableIndexXY = TableIndexToWorldXY(e_iTableIndex);
+	auto l_Offset = this->m_GridData.GetTankOffsetPos();
+	l_TableIndexXY.x -= l_Offset.x;
+	l_TableIndexXY.y -= l_Offset.y;
+	m_GridData.CurrentFirstIndex = l_TableIndexXY;
 }
 
 void cTestMap::GenerateMap(sIDAndProbability&e_IDAndProbability)
@@ -301,6 +217,22 @@ void cTestMap::Init()
 		const char*l_strFileName = "Test/TestMap.xml";
 		PARSEWITHMYPARSE_FAILED_MESSAGE_BOX(this, l_strFileName);
 	}
+	if (m_pTestTankController)
+	{
+		const char*l_strFileName = "Test/TestTank.xml";
+		PARSEWITHMYPARSE_FAILED_MESSAGE_BOX(m_pTestTankController,l_strFileName);
+		m_pTestTankController->Init();
+		int l_iCount = m_pTestTankController->Count();
+		for (int i = 0; i < l_iCount; ++i)
+		{
+			auto l_pTank = m_pTestTankController->GetObject(i);
+			int l_iTankIndex = this->m_GridData.GetTankIndex();
+			l_pTank->SetTableIndex(l_iTankIndex+i, eDirection::eD_DOWN);
+		}
+		auto l_pTank = m_pTestTankController->SelectNextTank();
+		CameraJumpTo(l_pTank->GetTableIndex());
+	}
+
 	FMLog::LogWithFlag("cTestMap::Init() end", LOG_ID_MAP, false);
 }
 
@@ -315,7 +247,7 @@ void cTestMap::Update(float e_fElpaseTime)
 		{
 			int	l_iIndexX = 0;
 			int	l_iIndexY = 0;
-			int l_iMapIndex = this->m_GridData.GetConvertIndex(i, j, l_iIndexX, l_iIndexY);
+			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(i, j, l_iIndexX, l_iIndexY);
 			if (l_iMapIndex == -1)
 			{
 				assert(0 && "cTestMap::Update l_iMapIndex wrong!");
@@ -332,17 +264,22 @@ void cTestMap::Update(float e_fElpaseTime)
 			}
 		}
 	}
+	if (m_pTestTankController)
+	{
+		m_pTestTankController->Update(e_fElpaseTime);
+	}
 }
 
 void cTestMap::Render()
 {
+	glEnable2D(m_GridData.vResoultion.x, m_GridData.vResoultion.y);
 	for (int i = 0; i < m_GridData.iViewableRow; ++i)
 	{
 		for (int j = 0; j < m_GridData.iViewableColumn; ++j)
 		{
 			int	l_iIndexX = 0;
 			int	l_iIndexY = 0;
-			int l_iMapIndex = this->m_GridData.GetConvertIndex(i, j, l_iIndexX, l_iIndexY);
+			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(i, j, l_iIndexX, l_iIndexY);
 			if (l_iMapIndex == -1)
 			{
 				continue;
@@ -354,18 +291,24 @@ void cTestMap::Render()
 			}
 		}
 	}
+	if (m_pTestTankController)
+	{
+		m_pTestTankController->Render();
+	}
+	glEnable2D(cGameApp::m_svGameResolution.x, cGameApp::m_svGameResolution.y);
 }
 
 void cTestMap::DebugRender()
 {
-	cGameApp::m_spGlyphFontRender->SetScale(0.5f);
+	glEnable2D(m_GridData.vResoultion.x, m_GridData.vResoultion.y);
+	cGameApp::m_spGlyphFontRender->SetScale(0.7f);
 	for (int i = 0; i < m_GridData.iViewableRow; ++i)
 	{
 		for (int j = 0; j < m_GridData.iViewableColumn; ++j)
 		{
 			int	l_iIndexX = 0;
 			int	l_iIndexY = 0;
-			int l_iMapIndex = this->m_GridData.GetConvertIndex(i, j, l_iIndexX, l_iIndexY);
+			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(i, j, l_iIndexX, l_iIndexY);
 			if (l_iMapIndex == -1)
 			{
 				continue;
@@ -395,5 +338,70 @@ void cTestMap::DebugRender()
 		GLRender::RenderLine((float*)l_vPos, 2, Vector4::One, 2);
 	}		
 	Vector2 l_vTankPos = Vector2(m_GridData.iViewableRow / 2* m_GridData.iGridWidth, m_GridData.iViewableColumn / 2* m_GridData.iGridHeight);
-	GLRender::RenderRectangle(l_vTankPos,m_GridData.iGridWidth, m_GridData.iGridHeight,Vector4::Red);
+	GLRender::RenderRectangle(l_vTankPos,(float)m_GridData.iGridWidth, (float)m_GridData.iGridHeight,Vector4::Red);
+	glEnable2D(cGameApp::m_svGameResolution.x, cGameApp::m_svGameResolution.y);
+}
+
+bool cTestMap::IsMoveAble(int e_iTableIndex, int& e_iNewTableIndex)
+{
+	int l_iIndex = UT::GetLoopIndex(e_iTableIndex, m_GridData.iTotal);
+	e_iNewTableIndex = l_iIndex;
+	if (m_GridData.ppTestObjectArray[l_iIndex]->GetHP() == 0)
+		return true;
+	return false;
+}
+
+
+int	cTestMap::GetTableIndexByDirection(int e_iTableIndex, eDirection e_eDirection)
+{
+	int l_iIndex = -1;
+	switch (e_eDirection)
+	{
+	case eD_LEFT:
+		l_iIndex = UT::GetLoopIndex(e_iTableIndex - 1, m_GridData.iTotal);
+		break;
+	case eD_UP:
+		l_iIndex = UT::GetLoopIndex(e_iTableIndex - m_GridData.iRow, m_GridData.iTotal);
+		break;
+	case eD_RIGHT:
+		l_iIndex = UT::GetLoopIndex(e_iTableIndex + 1, m_GridData.iTotal);
+		break;
+	case eD_DOWN:
+		l_iIndex = UT::GetLoopIndex(e_iTableIndex + m_GridData.iRow, m_GridData.iTotal);
+		break;
+	default:
+		return -1;
+		break;
+	}
+	return l_iIndex;
+}
+
+POINT cTestMap::TableIndexToLocalXY(int e_iTableIndex)
+{
+	int l_iY = e_iTableIndex/this->m_GridData.iRow;
+	int l_iX = e_iTableIndex - (l_iY * this->m_GridData.iRow);
+	l_iX = l_iX-this->m_GridData.CurrentFirstIndex.x;
+	l_iY = l_iY-this->m_GridData.CurrentFirstIndex.y;
+	POINT l_Result = { l_iX ,l_iY };
+	return l_Result;
+}
+
+POINT cTestMap::TableIndexToWorldXY(int e_iTableIndex)
+{
+	int l_iY = e_iTableIndex / this->m_GridData.iRow;
+	int l_iX = e_iTableIndex - l_iY * this->m_GridData.iRow;
+	POINT l_Result = { l_iX ,l_iY };
+	return l_Result;
+}
+
+bool	cTestMap::IsXYInLocalView(POINT e_Pos)
+{
+	if (e_Pos.x >= m_GridData.CurrentFirstIndex.x &&
+		e_Pos.x <= m_GridData.CurrentFirstIndex.x &&
+		e_Pos.y >= m_GridData.CurrentFirstIndex.y &&
+		e_Pos.y <= m_GridData.CurrentFirstIndex.y)
+	{
+		return true;
+	}
+	return false;
 }

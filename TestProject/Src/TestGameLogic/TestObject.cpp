@@ -7,6 +7,7 @@ cTestObjectBase::cTestObjectBase()
 	m_iTableIndex = 0;
 	this->m_iHP = 0;
 	this->m_iID = -1;
+	m_iOriginalHP = 0;
 }
 
 cTestObjectBase::cTestObjectBase(cTestObjectBase * e_pTestObjectBase)
@@ -14,6 +15,7 @@ cTestObjectBase::cTestObjectBase(cTestObjectBase * e_pTestObjectBase)
 	m_pRenderObject = e_pTestObjectBase->m_pRenderObject;
 	this->m_iHP = e_pTestObjectBase->m_iHP;
 	this->m_iID = e_pTestObjectBase->m_iID;
+	m_iOriginalHP = e_pTestObjectBase->m_iOriginalHP;
 	m_iTableIndex = 0;
 	
 }
@@ -36,7 +38,7 @@ cTestObjectBase::cTestObjectBase(TiXmlElement * e_pTiXmlElement)
 		else
 		COMPARE_NAME("HP")
 		{
-			this->m_iHP = GetInt(l_strValue);
+			m_iOriginalHP = this->m_iHP = GetInt(l_strValue);
 		}
 		else
 		COMPARE_NAME("PI")
@@ -85,13 +87,14 @@ void cTestObjectBase::Init()
 
 void cTestObjectBase::Update(float e_fElpaseTime)
 {
-
+	this->InternalUpdate(e_fElpaseTime);
 }
 
 void cTestObjectBase::Render()
 {
 	if (m_pRenderObject && this->m_iHP != 0)
 	{
+		this->InternalRender();
 		auto l_vPos = this->GetWorldPosition();
 		m_pRenderObject->SetPos(this->GetWorldPosition());
 		m_pRenderObject->Render();

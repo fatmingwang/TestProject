@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\TestGameLogic\GameApp.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\stdafx.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TankBullet.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TankController.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestMap.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestMapDataParse.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestObject.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestObjectFloor.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestObjectHay.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestObjectWall.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TestGameLogic\TestTank.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="WASMTest.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Src">
+      <UniqueIdentifier>{d1bd4742-b6c0-472e-9b93-8f1bc9932d5d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\TestGameLogic\Event.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\GameApp.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\LogID.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\stdafx.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TankBullet.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TankController.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TestMap.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TestObject.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TestObjectFloor.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TestObjectHay.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TestObjectWall.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TestGameLogic\TestTank.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

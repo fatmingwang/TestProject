@@ -1,12 +1,33 @@
 #include "stdafx.h"
 #include "../../AllLibInclude.h"
-#include "GameApp.h"
+#include "../../TestGameLogic/GameApp.h"
 #include <emscripten.h>
 #include <SDL/SDL.h>
 cGameApp*g_pGameApp = 0;
 cPreLoadFromInternet*g_pPreLoadFromInternet = nullptr;
 void handle_key_up(SDL_keysym* keysym)
 {
+	   //left,up,right,down,->1104,1106,1103,1105
+		//		ctrl->		 1252
+		  // d->100
+	FMLog::Log(UT::ComposeMsgByFormat("key:%d", keysym->sym).c_str(), false);
+	if (g_pGameApp)
+	{
+		unsigned char l_ucKey;
+		switch(keysym->sym)
+		{
+			case 1104:l_ucKey = 37;	break;
+			case 1106:l_ucKey = 38;	break;
+			case 1103:l_ucKey = 39; break;
+			case 1105:l_ucKey = 40; break;
+			case 1252:l_ucKey = 17; break;
+			case 100:l_ucKey = 'D'; break;
+			default:
+				return;
+				break;
+		}
+		g_pGameApp->KeyUp(l_ucKey);
+	}
 	switch (keysym->sym)
 	{
 	case SDLK_ESCAPE:
@@ -21,6 +42,23 @@ void handle_key_up(SDL_keysym* keysym)
 
 void handle_key_down(SDL_keysym* keysym)
 {
+	if (g_pGameApp)
+	{
+		unsigned char l_ucKey;
+		switch (keysym->sym)
+		{
+		case 1104:l_ucKey = 37;	break;
+		case 1106:l_ucKey = 38;	break;
+		case 1103:l_ucKey = 39; break;
+		case 1105:l_ucKey = 40; break;
+		case 1252:l_ucKey = 17; break;
+		case 100:l_ucKey = 'D'; break;
+		default:
+			return;
+			break;
+		}
+		g_pGameApp->KeyDown(l_ucKey);
+	}
 	switch (keysym->sym) 
 	{
 		case SDLK_ESCAPE:
@@ -67,18 +105,17 @@ void process_events(void)
 void Loop()
 {
 	g_pGameApp->Run();
-	if (g_pPreLoadFromInternet)
-	{
-		g_pPreLoadFromInternet->Run();
-		if (g_pPreLoadFromInternet->GetProgress() >= 1.f)
-		{
-			SAFE_DELETE(g_pPreLoadFromInternet);
-			cGameApp::OutputDebugInfoString("finish pre-download files");
-			g_pGameApp->Init();
-			g_pGameApp->m_svBGColor = Vector4::Red;
-		}
-	}
-	else
+	//if (g_pPreLoadFromInternet)
+	//{
+	//	g_pPreLoadFromInternet->Run();
+	//	if (g_pPreLoadFromInternet->GetProgress() >= 1.f)
+	//	{
+	//		SAFE_DELETE(g_pPreLoadFromInternet);
+	//		cGameApp::OutputDebugInfoString("finish pre-download files");
+	//		g_pGameApp->Init();
+	//	}
+	//}
+	//else
 	{
 		process_events();
 	}
@@ -118,14 +155,18 @@ int main()
 		return -1;
 	}
 	//cGameApp::SetAcceptRationWithGameresolution(800,600, (int)cGameApp::m_svGameResolution.x, (int)cGameApp::m_svGameResolution.y);
-	g_pPreLoadFromInternet = new cPreLoadFromInternet();
-	bool	l_bDurningPreload = g_pPreLoadFromInternet->Init("assets/PreloadResource.xml");
+	//g_pPreLoadFromInternet = new cPreLoadFromInternet();
+	//bool	l_bDurningPreload = g_pPreLoadFromInternet->Init("assets/PreloadResource.xml");
 	if (l_pSurf_Display)
 	{
 		cGameApp::m_sbDebugFunctionWorking = true;
-		cGameApp::m_svGameResolution.x = 1920;
-		cGameApp::m_svGameResolution.y = 1080;
-		g_pGameApp = new cEngineTestApp(cGameApp::m_svGameResolution, Vector2(cGameApp::m_svViewPortSize.Width(), cGameApp::m_svViewPortSize.Height()));
+		cGameApp::m_svGameResolution.x = 720;
+		cGameApp::m_svGameResolution.y = 1280;
+		g_pGameApp = new cTestApp(cGameApp::m_svGameResolution, Vector2(cGameApp::m_svViewPortSize.Width(), cGameApp::m_svViewPortSize.Height()));
+		if (g_pGameApp)
+			g_pGameApp->Init();
+		cGameApp::SetAcceptRationWithGameresolution(CANVANS_WIDTH, CANVANS_HEIGHT, (int)cGameApp::m_svGameResolution.x, (int)cGameApp::m_svGameResolution.y);
+		FMLog::Log("start to emscripten_set_main_loop\n", false);
 		emscripten_set_main_loop(&Loop, 0 ,1);
 	}
 	return 0;

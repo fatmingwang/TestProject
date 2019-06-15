@@ -1,7 +1,11 @@
-<!-- Author:Fatming,Time:6/14/2019 4:19:13 PM -->
-<PuzzleImage OriginalNameSort="Tree,Gate,NPC_1,NPC_2" ImageName="Image.png" Count="4" GeneratePuzzleimageUnit="0">
-    <PuzzleUnit Name="Tree" UV="0,0,0.234375,0.1171875" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="0,0" />
+<!-- Author:Fatming,Time:6/14/2019 9:08:03 PM -->
+<PuzzleImage OriginalNameSort="Tree,Gate,NPC_1,NPC_2,Up,Down,Left,Right" ImageName="Image.png" Count="8" GeneratePuzzleimageUnit="0">
+    <PuzzleUnit Name="Up" UV="0,0.1191406,0.234375,0.2363281" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="0,61" />
+    <PuzzleUnit Name="Down" UV="0.2382813,0.1191406,0.4726563,0.2363281" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="61,61" />
+    <PuzzleUnit Name="Left" UV="0.4765625,0.1191406,0.7109375,0.2363281" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="122,61" />
+    <PuzzleUnit Name="Right" UV="0.7148438,0.1191406,0.9492188,0.2363281" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="183,61" />
     <PuzzleUnit Name="Gate" UV="0.2382813,0,0.4726563,0.1171875" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="61,0" />
     <PuzzleUnit Name="NPC_1" UV="0.4765625,0,0.7109375,0.1171875" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="122,0" />
     <PuzzleUnit Name="NPC_2" UV="0.7148438,0,0.9492188,0.1171875" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="183,0" />
+    <PuzzleUnit Name="Tree" UV="0,0,0.234375,0.1171875" OffsetPos="0,0" Size="60,60" OriginalSize="60,60" ShowPosInPI="0,0" />
 </PuzzleImage>

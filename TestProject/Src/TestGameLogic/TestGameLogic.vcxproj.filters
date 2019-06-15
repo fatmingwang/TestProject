@@ -56,6 +56,9 @@
     <ClInclude Include="Event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TankBullet.h">
+      <Filter>Tank</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameApp.cpp">
@@ -84,6 +87,12 @@
     </ClCompile>
     <ClCompile Include="TankController.cpp">
       <Filter>Tank</Filter>
+    </ClCompile>
+    <ClCompile Include="TankBullet.cpp">
+      <Filter>Tank</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMapDataParse.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
