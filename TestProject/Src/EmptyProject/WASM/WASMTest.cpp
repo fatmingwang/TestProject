@@ -22,6 +22,7 @@ void handle_key_up(SDL_keysym* keysym)
 			case 1105:l_ucKey = 40; break;
 			case 1252:l_ucKey = 17; break;
 			case 100:l_ucKey = 'D'; break;
+			case 9:l_ucKey = 9; break;
 			default:
 				return;
 				break;
@@ -53,6 +54,7 @@ void handle_key_down(SDL_keysym* keysym)
 		case 1105:l_ucKey = 40; break;
 		case 1252:l_ucKey = 17; break;
 		case 100:l_ucKey = 'D'; break;
+		case 9:l_ucKey = 9; break;
 		default:
 			return;
 			break;
