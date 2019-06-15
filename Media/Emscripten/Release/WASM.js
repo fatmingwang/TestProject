@@ -192,7 +192,7 @@ Module['FS_createPath']('/assets', 'Test', true, true);
   }
 
  }
- loadPackage({"files": [{"start": 0, "audio": 0, "end": 24682, "filename": "/assets/Font.FontInfo"}, {"start": 24682, "audio": 0, "end": 44747, "filename": "/assets/Font.png"}, {"start": 44747, "audio": 0, "end": 44772, "filename": "/assets/PreloadResource.xml"}, {"start": 44772, "audio": 0, "end": 46099, "filename": "/assets/Test/Image.pi"}, {"start": 46099, "audio": 0, "end": 97840, "filename": "/assets/Test/Image.png"}, {"start": 97840, "audio": 0, "end": 111818, "filename": "/assets/Test/RM.png"}, {"start": 111818, "audio": 0, "end": 112644, "filename": "/assets/Test/TestMap.xml"}, {"start": 112644, "audio": 0, "end": 113211, "filename": "/assets/Test/TestTank.xml"}], "remote_package_size": 113211, "package_uuid": "e6898b29-5070-40f2-9ef2-38e69694031d"});
+ loadPackage({"files": [{"start": 0, "audio": 0, "end": 24682, "filename": "/assets/Font.FontInfo"}, {"start": 24682, "audio": 0, "end": 44747, "filename": "/assets/Font.png"}, {"start": 44747, "audio": 0, "end": 44772, "filename": "/assets/PreloadResource.xml"}, {"start": 44772, "audio": 0, "end": 46099, "filename": "/assets/Test/Image.pi"}, {"start": 46099, "audio": 0, "end": 97840, "filename": "/assets/Test/Image.png"}, {"start": 97840, "audio": 0, "end": 111818, "filename": "/assets/Test/RM.png"}, {"start": 111818, "audio": 0, "end": 112644, "filename": "/assets/Test/TestMap.xml"}, {"start": 112644, "audio": 0, "end": 113211, "filename": "/assets/Test/TestTank.xml"}], "remote_package_size": 113211, "package_uuid": "776d0e22-feb5-4a30-a0c5-19fd31739409"});
 
 })();
 
