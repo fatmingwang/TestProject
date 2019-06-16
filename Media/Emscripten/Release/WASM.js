@@ -192,7 +192,7 @@ Module['FS_createPath']('/assets', 'Test', true, true);
   }
 
  }
- loadPackage({"files": [{"start": 0, "audio": 0, "end": 24682, "filename": "/assets/Font.FontInfo"}, {"start": 24682, "audio": 0, "end": 44747, "filename": "/assets/Font.png"}, {"start": 44747, "audio": 0, "end": 44772, "filename": "/assets/PreloadResource.xml"}, {"start": 44772, "audio": 0, "end": 46099, "filename": "/assets/Test/Image.pi"}, {"start": 46099, "audio": 0, "end": 97840, "filename": "/assets/Test/Image.png"}, {"start": 97840, "audio": 0, "end": 111818, "filename": "/assets/Test/RM.png"}, {"start": 111818, "audio": 0, "end": 112644, "filename": "/assets/Test/TestMap.xml"}, {"start": 112644, "audio": 0, "end": 113211, "filename": "/assets/Test/TestTank.xml"}], "remote_package_size": 113211, "package_uuid": "776d0e22-feb5-4a30-a0c5-19fd31739409"});
+ loadPackage({"files": [{"start": 0, "audio": 0, "end": 24682, "filename": "/assets/Font.FontInfo"}, {"start": 24682, "audio": 0, "end": 44747, "filename": "/assets/Font.png"}, {"start": 44747, "audio": 0, "end": 44772, "filename": "/assets/PreloadResource.xml"}, {"start": 44772, "audio": 0, "end": 46099, "filename": "/assets/Test/Image.pi"}, {"start": 46099, "audio": 0, "end": 97840, "filename": "/assets/Test/Image.png"}, {"start": 97840, "audio": 0, "end": 111818, "filename": "/assets/Test/RM.png"}, {"start": 111818, "audio": 0, "end": 112738, "filename": "/assets/Test/TestMap.xml"}, {"start": 112738, "audio": 0, "end": 113305, "filename": "/assets/Test/TestTank.xml"}], "remote_package_size": 113305, "package_uuid": "269cf5bd-4b91-4b7b-aa13-5ec6e5b3f19c"});
 
 })();
 
@@ -1444,11 +1444,11 @@ function updateGlobalBufferViews() {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 299056,
+    STACK_BASE = 298928,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 5541936,
-    DYNAMIC_BASE = 5541936,
-    DYNAMICTOP_PTR = 299024;
+    STACK_MAX = 5541808,
+    DYNAMIC_BASE = 5541808,
+    DYNAMICTOP_PTR = 298896;
 
 
 
@@ -1838,7 +1838,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 298032;
+// STATICTOP = STATIC_BASE + 297904;
 /* global initializers */  __ATINIT__.push({ func: function() { globalCtors() } });
 
 
@@ -1849,7 +1849,7 @@ var ASM_CONSTS = [];
 
 
 /* no memory initializer */
-var tempDoublePtr = 299040
+var tempDoublePtr = 298912
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
   HEAP8[tempDoublePtr] = HEAP8[ptr];
@@ -10701,10 +10701,10 @@ function copyTempDouble(ptr) {
     }
 
   
-  var ___tm_current=298864;
+  var ___tm_current=298736;
   
   
-  var ___tm_timezone=(stringToUTF8("GMT", 298912, 4), 298912);
+  var ___tm_timezone=(stringToUTF8("GMT", 298784, 4), 298784);
   
   function _tzset() {
       // TODO: Use (malleable) environment variables instead of system settings.

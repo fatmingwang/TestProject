@@ -47,18 +47,18 @@ void cTestMap::sGridData::Setup(TiXmlElement * e_pElement)
 		iViewableRow = 3;
 		FMLog::LogWithFlag("iViewableRow smaller than 3!!!?magic increase happen!", LOG_ID_MAP, false);
 	}
-	if (iRow <= iViewableColumn)
-	{
-		iRow = iViewableColumn * 2;
-		FMLog::LogWithFlag("iViewableColumn bigger than iRow!!!?magic increase happen!", LOG_ID_MAP, false);
-	}
-	if (iColumn <= iViewableRow)
-	{
-		iColumn = iViewableRow * 2;
-		FMLog::LogWithFlag("iViewableRow bigger than iColumn!!!?magic increase happen!", LOG_ID_MAP, false);
-	}
-	iGridWidth = (int)l_vResolution.x / iViewableRow;
-	iGridHeight = (int)l_vResolution.y / iViewableColumn;
+	//if (iRow <= iViewableRow)
+	//{
+	//	iRow = iViewableRow * 2;
+	//	FMLog::LogWithFlag("iViewableColumn bigger than iRow!!!?magic increase happen!", LOG_ID_MAP, false);
+	//}
+	//if (iColumn <= iViewableColumn)
+	//{
+	//	iColumn = iViewableColumn * 2;
+	//	FMLog::LogWithFlag("iViewableRow bigger than iColumn!!!?magic increase happen!", LOG_ID_MAP, false);
+	//}
+	iGridHeight	= (int)l_vResolution.y / iViewableRow;
+	iGridWidth	= (int)l_vResolution.x / iViewableColumn;
 	iTotal = iRow * iColumn;
 
 }

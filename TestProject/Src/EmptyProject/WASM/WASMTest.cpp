@@ -58,7 +58,7 @@ void handle_key_down(SDL_keysym* keysym)
 		default:
 			return;
 			break;
-		}
+		}											 
 		g_pGameApp->KeyDown(l_ucKey);
 	}
 	switch (keysym->sym) 

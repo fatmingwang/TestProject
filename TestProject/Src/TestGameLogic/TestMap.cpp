@@ -10,17 +10,20 @@
 
 POINT cTestMap::sGridData::GetTankOffsetPos()
 {
-	POINT l_Pos = { this->iViewableRow / 2,this->iViewableColumn / 2 };
+	POINT l_Pos = { this->iViewableColumn / 2,this->iViewableRow / 2 };
 	return l_Pos;
 }
 cTestMap::sGridData::sGridData()
 {
-	const int l_ciDefaultWidth = 30;
-	const int l_ciDefaultHeight = 30;
-	iViewableRow = (int)cGameApp::m_svGameResolution.x / l_ciDefaultWidth;;
-	iViewableColumn = (int)cGameApp::m_svGameResolution.y / l_ciDefaultHeight;;
-	iRow = iViewableRow * 5;
-	iColumn = iViewableColumn * 5;
+	const int l_ciDefaultWidth = 60;
+	const int l_ciDefaultHeight = 60;
+	vResoultion.x = cGameApp::m_svGameResolution.x;
+	vResoultion.y = cGameApp::m_svGameResolution.y;
+	iViewableColumn = (int)cGameApp::m_svGameResolution.x / l_ciDefaultWidth;;
+	iViewableRow = (int)cGameApp::m_svGameResolution.y / l_ciDefaultHeight;;
+	iRow = iViewableRow * 2;
+	iColumn = iViewableColumn * 2;
+	iTotal = iRow * iColumn;
 	iGridWidth = l_ciDefaultWidth;
 	iGridHeight = l_ciDefaultHeight;
 	CurrentFirstIndex = { iRow/2,iColumn /2};
@@ -70,9 +73,9 @@ NamedTypedObject * cTestMap::Clone()
 
 int cTestMap::sGridData::GetConvertTableIndex(int e_iLocalX, int e_iLocalY, int&e_iConvertedX, int&e_iConvertedY)
 {
-	e_iConvertedX = UT::GetLoopIndex(this->CurrentFirstIndex.x+ e_iLocalX, iRow);
-	e_iConvertedY = UT::GetLoopIndex(this->CurrentFirstIndex.y+ e_iLocalY, iColumn);
-	int l_iMapIndex = (e_iConvertedY* iRow) + e_iConvertedX;
+	e_iConvertedX = UT::GetLoopIndex(this->CurrentFirstIndex.x+ e_iLocalX, iColumn);
+	e_iConvertedY = UT::GetLoopIndex(this->CurrentFirstIndex.y+ e_iLocalY, iRow);
+	int l_iMapIndex = (e_iConvertedY* iColumn) + e_iConvertedX;
 	if (l_iMapIndex < 0 || l_iMapIndex >= this->iTotal)
 	{
 		return -1;
@@ -84,7 +87,7 @@ int cTestMap::sGridData::GetTankIndex()
 {
 	int l_iConvertedX = 0;
 	int l_iConvertedY = 0;
-	int l_iTankIndex = GetConvertTableIndex(iViewableRow / 2, iViewableColumn / 2, l_iConvertedX, l_iConvertedY);
+	int l_iTankIndex = GetConvertTableIndex(iViewableColumn/ 2, iViewableRow / 2, l_iConvertedX, l_iConvertedY);
 	return l_iTankIndex;
 }
 
@@ -103,35 +106,40 @@ bool cTestMap::KeyEventFuntion(void * e_pData)
 		if(m_fMoveSpeedUp <= m_fMaxSpeed)
 			m_fMoveSpeedUp += m_fIncreaseSpeed;
 		int l_iTankIndex = this->m_GridData.GetTankIndex();
-		int l_iFinalIndex = -1;
+		int l_iConvertedX, l_iConvertedY;
+		POINT l_LocalPos = TableIndexToLocalXY(l_iTankIndex);;
 		eDirection l_Direction = eDirection::eD_MAX;
 		//37,38,39,40
 		//left,up,right,down
 		switch (l_peT_E_KEY_DOWNData->ucKey)
 		{
 			case 37:
-				if (IsMoveAble(l_iTankIndex - 1, l_iTankIndex))
+				l_iTankIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x-1, l_LocalPos.y, l_iConvertedX, l_iConvertedY);
+				if (IsMoveAble(l_iTankIndex, l_iTankIndex))
 				{
 					--this->m_GridData.CurrentFirstIndex.x;
 					l_Direction = eD_LEFT;
 				}
 				break;
 			case 38:
-				if (IsMoveAble(l_iTankIndex - m_GridData.iRow, l_iTankIndex))
+				l_iTankIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x, l_LocalPos.y-1, l_iConvertedX, l_iConvertedY);
+				if (IsMoveAble(l_iTankIndex, l_iTankIndex))
 				{
 					--this->m_GridData.CurrentFirstIndex.y;
 					l_Direction = eD_UP;
 				}
 				break;
 			case 39:
-				if (IsMoveAble(l_iTankIndex + 1, l_iTankIndex))
+				l_iTankIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x+1, l_LocalPos.y, l_iConvertedX, l_iConvertedY);
+				if (IsMoveAble(l_iTankIndex, l_iTankIndex))
 				{
 					++this->m_GridData.CurrentFirstIndex.x;
 					l_Direction = eD_RIGHT;
 				}
 				break;
 			case 40:
-				if (IsMoveAble(l_iTankIndex + m_GridData.iRow, l_iTankIndex))
+				l_iTankIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x, l_LocalPos.y + 1, l_iConvertedX, l_iConvertedY);
+				if (IsMoveAble(l_iTankIndex, l_iTankIndex))
 				{
 					++this->m_GridData.CurrentFirstIndex.y;
 					l_Direction = eD_DOWN;
@@ -181,8 +189,8 @@ void cTestMap::GenerateMap(sIDAndProbability&e_IDAndProbability)
 	m_GridData.Destroy();
 	int l_iTotal = m_GridData.iTotal;
 	m_GridData.ppTestObjectArray = new cTestObjectBase*[l_iTotal];
-	m_GridData.CurrentFirstIndex.x = m_GridData.iRow/2;
-	m_GridData.CurrentFirstIndex.y = m_GridData.iColumn / 2;
+	m_GridData.CurrentFirstIndex.x = m_GridData.iColumn/2;
+	m_GridData.CurrentFirstIndex.y = m_GridData.iRow / 2;
 	for (int i = 0; i < m_GridData.iColumn; ++i)
 	{
 		for (int j = 0; j < m_GridData.iRow; ++j)
@@ -240,14 +248,13 @@ void cTestMap::Update(float e_fElpaseTime)
 {
 	m_NextTimeAllowToMoveTC.Update(e_fElpaseTime*m_fMoveSpeedUp);
 	Vector3 l_vMapPos = this->GetWorldPosition();
-	int l_iTotal = m_GridData.iRow*m_GridData.iColumn;
 	for (int i = 0; i < m_GridData.iViewableRow; ++i)
 	{
 		for (int j = 0; j < m_GridData.iViewableColumn; ++j)
 		{
 			int	l_iIndexX = 0;
 			int	l_iIndexY = 0;
-			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(i, j, l_iIndexX, l_iIndexY);
+			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(j, i, l_iIndexX, l_iIndexY);
 			if (l_iMapIndex == -1)
 			{
 				assert(0 && "cTestMap::Update l_iMapIndex wrong!");
@@ -257,8 +264,8 @@ void cTestMap::Update(float e_fElpaseTime)
 			if (l_pObject)
 			{
 				Vector3 l_vPos = l_vMapPos;
-				l_vPos.x += (float)m_GridData.iGridWidth*i;
-				l_vPos.y += (float)m_GridData.iGridHeight*j;
+				l_vPos.x += (float)m_GridData.iGridWidth*j;
+				l_vPos.y += (float)m_GridData.iGridHeight*i;
 				l_pObject->SetLocalPosition(l_vPos);
 				l_pObject->Update(e_fElpaseTime);
 			}
@@ -279,7 +286,7 @@ void cTestMap::Render()
 		{
 			int	l_iIndexX = 0;
 			int	l_iIndexY = 0;
-			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(i, j, l_iIndexX, l_iIndexY);
+			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(j, i, l_iIndexX, l_iIndexY);
 			if (l_iMapIndex == -1)
 			{
 				continue;
@@ -301,14 +308,14 @@ void cTestMap::Render()
 void cTestMap::DebugRender()
 {
 	glEnable2D(m_GridData.vResoultion.x, m_GridData.vResoultion.y);
-	cGameApp::m_spGlyphFontRender->SetScale(0.7f);
+	cGameApp::m_spGlyphFontRender->SetScale(1.f);
 	for (int i = 0; i < m_GridData.iViewableRow; ++i)
 	{
 		for (int j = 0; j < m_GridData.iViewableColumn; ++j)
 		{
 			int	l_iIndexX = 0;
 			int	l_iIndexY = 0;
-			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(i, j, l_iIndexX, l_iIndexY);
+			int l_iMapIndex = this->m_GridData.GetConvertTableIndex(j, i, l_iIndexX, l_iIndexY);
 			if (l_iMapIndex == -1)
 			{
 				continue;
@@ -318,7 +325,7 @@ void cTestMap::DebugRender()
 			{
 				auto l_vPos = l_pObject->GetWorldPosition();
 				//cGameApp::RenderFont(l_vPos.x, l_vPos.y,UT::ComposeMsgByFormat(L"ID:%d,Index:%d,%d,HP:%d", l_pObject->GetID(), l_iIndexX, l_iIndexY, l_pObject->GetHP()));
-				cGameApp::RenderFont(l_vPos.x+5, l_vPos.y+5, UT::ComposeMsgByFormat(L"%d", l_iMapIndex));
+				cGameApp::RenderFont(l_vPos.x+ 5, l_vPos.y+5, UT::ComposeMsgByFormat(L"%d", l_iMapIndex));
 			}
 		}
 	}
@@ -327,17 +334,18 @@ void cTestMap::DebugRender()
 	Vector3 l_vMapPos = this->GetWorldPosition();
 	for (int i = 0; i < m_GridData.iViewableColumn; ++i)
 	{
-		l_vPos[0] = Vector2(0 + l_vMapPos.x, m_GridData.iGridHeight*i + l_vMapPos.y);
-		l_vPos[1] = Vector2(m_GridData.vResoultion.x + l_vMapPos.x, m_GridData.iGridHeight*(i)+l_vMapPos.y);
+		l_vPos[0] = Vector2(m_GridData.iGridWidth*i + l_vMapPos.x, 0 + l_vMapPos.y);
+		l_vPos[1] = Vector2(m_GridData.iGridWidth*i + l_vMapPos.x, m_GridData.vResoultion.y + l_vMapPos.y);
 		GLRender::RenderLine((float*)l_vPos, 2, Vector4::One, 2);
 	}
 	for (int i = 0; i < m_GridData.iViewableRow; ++i)
 	{
-		l_vPos[0] = Vector2(m_GridData.iGridWidth*i + l_vMapPos.x, 0 + l_vMapPos.y);
-		l_vPos[1] = Vector2(m_GridData.iGridWidth*i + l_vMapPos.x, m_GridData.vResoultion.y + l_vMapPos.y);
+
+		l_vPos[0] = Vector2(0 + l_vMapPos.x, m_GridData.iGridHeight*i + l_vMapPos.y);
+		l_vPos[1] = Vector2(m_GridData.vResoultion.x + l_vMapPos.x, m_GridData.iGridHeight*(i)+l_vMapPos.y);
 		GLRender::RenderLine((float*)l_vPos, 2, Vector4::One, 2);
 	}		
-	Vector2 l_vTankPos = Vector2(m_GridData.iViewableRow / 2* m_GridData.iGridWidth, m_GridData.iViewableColumn / 2* m_GridData.iGridHeight);
+	Vector2 l_vTankPos = Vector2(m_GridData.iViewableColumn /2* m_GridData.iGridWidth, m_GridData.iViewableRow / 2* m_GridData.iGridHeight);
 	GLRender::RenderRectangle(l_vTankPos,(float)m_GridData.iGridWidth, (float)m_GridData.iGridHeight,Vector4::Red);
 	glEnable2D(cGameApp::m_svGameResolution.x, cGameApp::m_svGameResolution.y);
 }
@@ -355,19 +363,21 @@ bool cTestMap::IsMoveAble(int e_iTableIndex, int& e_iNewTableIndex)
 int	cTestMap::GetTableIndexByDirection(int e_iTableIndex, eDirection e_eDirection)
 {
 	int l_iIndex = -1;
+	int l_iConvertedX, l_iConvertedY;
+	POINT l_LocalPos = TableIndexToLocalXY(e_iTableIndex);;
 	switch (e_eDirection)
 	{
 	case eD_LEFT:
-		l_iIndex = UT::GetLoopIndex(e_iTableIndex - 1, m_GridData.iTotal);
+		l_iIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x - 1, l_LocalPos.y, l_iConvertedX, l_iConvertedY);
 		break;
 	case eD_UP:
-		l_iIndex = UT::GetLoopIndex(e_iTableIndex - m_GridData.iRow, m_GridData.iTotal);
+		l_iIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x , l_LocalPos.y-1, l_iConvertedX, l_iConvertedY);
 		break;
 	case eD_RIGHT:
-		l_iIndex = UT::GetLoopIndex(e_iTableIndex + 1, m_GridData.iTotal);
+		l_iIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x + 1, l_LocalPos.y, l_iConvertedX, l_iConvertedY);
 		break;
 	case eD_DOWN:
-		l_iIndex = UT::GetLoopIndex(e_iTableIndex + m_GridData.iRow, m_GridData.iTotal);
+		l_iIndex = this->m_GridData.GetConvertTableIndex(l_LocalPos.x, l_LocalPos.y + 1, l_iConvertedX, l_iConvertedY);
 		break;
 	default:
 		return -1;
@@ -378,18 +388,25 @@ int	cTestMap::GetTableIndexByDirection(int e_iTableIndex, eDirection e_eDirectio
 
 POINT cTestMap::TableIndexToLocalXY(int e_iTableIndex)
 {
-	int l_iY = e_iTableIndex/this->m_GridData.iRow;
-	int l_iX = e_iTableIndex - (l_iY * this->m_GridData.iRow);
-	l_iX = l_iX-this->m_GridData.CurrentFirstIndex.x;
-	l_iY = l_iY-this->m_GridData.CurrentFirstIndex.y;
+	int l_iY = e_iTableIndex/this->m_GridData.iColumn;
+	int l_iX = e_iTableIndex - (l_iY * this->m_GridData.iColumn);
+
+
+	int l_iCurrentPosX = UT::GetLoopIndex(this->m_GridData.CurrentFirstIndex.x, m_GridData.iColumn);
+	int l_iCurrentPosY = UT::GetLoopIndex(this->m_GridData.CurrentFirstIndex.y, m_GridData.iRow);
+
+	//l_iX = UT::GetLoopIndex(l_iX - l_iCurrentPosX, m_GridData.iViewableColumn);
+	//l_iY = UT::GetLoopIndex(l_iY - l_iCurrentPosY, m_GridData.iViewableRow);
+	l_iX = UT::GetLoopIndex(l_iX - l_iCurrentPosX, m_GridData.iColumn);
+	l_iY = UT::GetLoopIndex(l_iY - l_iCurrentPosY, m_GridData.iRow);
 	POINT l_Result = { l_iX ,l_iY };
 	return l_Result;
 }
 
 POINT cTestMap::TableIndexToWorldXY(int e_iTableIndex)
 {
-	int l_iY = e_iTableIndex / this->m_GridData.iRow;
-	int l_iX = e_iTableIndex - l_iY * this->m_GridData.iRow;
+	int l_iY = e_iTableIndex / this->m_GridData.iColumn;
+	int l_iX = e_iTableIndex - l_iY * this->m_GridData.iColumn;
 	POINT l_Result = { l_iX ,l_iY };
 	return l_Result;
 }
